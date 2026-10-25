@@ -1,0 +1,25 @@
+# Core (enough for scripts/aggregate_imotions.py and the tests)
+numpy
+pandas
+scipy
+pyyaml
+
+# Audio and transcription
+pydub
+openai-whisper
+demucs
+SpeechRecognition
+
+# Face
+opencv-python
+fer
+moviepy<2.0          # fer imports moviepy.editor, removed in moviepy 2
+
+# Voice
+praat-parselmouth
+librosa
+scikit-learn
+tensorflow
+
+# Text
+gensim

@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pitch-emotion"
+version = "0.1.0"
+description = "Facial, vocal and textual emotion measures for entrepreneurial pitch videos"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Jennie Jiongni Mao", email = "jennie.mao@unisg.ch" }]
+dependencies = ["numpy", "pandas", "scipy", "pyyaml"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

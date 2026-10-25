@@ -1,0 +1,53 @@
+# Configuration for scripts/run_pipeline.py and scripts/aggregate_imotions.py
+# Video IDs are taken from file names (stem), e.g. data/videos/12345.mp4 -> 12345
+
+paths:
+  videos: data/videos                   # input .mp4 files
+  work: work                            # intermediate audio, transcripts, frame-level scores
+  output: outputs/video_measures.csv    # one row per video
+  sex_file: data/sex.csv                # columns: video_id, sex (woman / man); used for Praat pitch ranges
+
+asr:
+  engine: whisper          # whisper (Appendix B.2) | google (Appendix B.3, free web API on 700 ms silence chunks)
+  whisper_model: large-v3
+  language: en               # Whisper language code
+  google_language: en-US     # Google SpeechRecognition language code
+  isolate_vocals: true     # remove background music with Demucs before transcription and voice analysis
+  demucs_device: null      # e.g. cuda, cpu; null lets Demucs decide
+
+text:
+  # Seed-word lists for the embedding measure (one word per line; LIWC wildcards like happ* allowed).
+  # LIWC is licensed and not included; set to null to skip.
+  positive_words: data/lexicons/positive_seeds.txt
+  negative_words: data/lexicons/negative_seeds.txt
+  # Download from https://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm ; null to skip
+  nrc_lexicon: data/lexicons/NRC-Emotion-Lexicon-Wordlevel-v0.92.txt
+  word2vec:
+    vector_size: 300
+    window: 5
+    min_count: 2
+    epochs: 20
+    seed: 42
+
+face:
+  enabled: true
+  interval_s: 0.1          # one frame every 0.1 s
+  save_frames: false       # true writes JPGs to work/frames/<video_id>/
+
+voice:
+  praat: true
+  classifier_dir: null     # e.g. models/voice after running scripts/train_voice_classifier.py
+
+# Commercial track: frame-level (AFFDEX) and segment-level (audEERING) exports from iMotions,
+# one CSV per video named <video_id>.csv. Column names vary by iMotions version: check your export.
+imotions:
+  affdex_dir: data/imotions/affdex
+  affdex_skiprows: 0
+  affdex_emotion_cols: [Anger, Disgust, Fear, Joy, Sadness, Surprise, Neutral]
+  affdex_neutral_col: Neutral
+  audeering_dir: data/imotions/audeering
+  audeering_skiprows: 0
+  audeering_start_col: SegmentStart
+  audeering_end_col: SegmentEnd
+  audeering_neutral_col: Neutral
+  output: outputs/imotions_measures.csv
